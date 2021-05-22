@@ -1,8 +1,6 @@
 console.log("WindScrib v1.0.0");
 
 const API_KEY = "9abf6c1d65810f7cff7b00a188f26a66";
-// let lon = "";
-// let lat = "";
 
 async function getUserGeoLocation() {
   return new Promise((resolve, reject) => {
@@ -42,10 +40,28 @@ function checkGeoLocation() {
   }
 }
 
-async function getWeatherInfo({ lat, lon }) {
+async function getWeatherInfoByGeoLocation({ lat, lon }) {
   if (!lat || !lon) return alert("Location access is required");
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+  const param = `lat=${lat}&lon=${lon}`;
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?${param}&appid=${API_KEY}&units=metric`;
+
+  const weatherResponse = await fetch(url);
+
+  const weatherData = await weatherResponse.json();
+
+  console.log(weatherData);
+
+  updateWeatherReport(weatherData);
+}
+
+async function getWeatherInfoByCity(city) {
+  if (!city) alert("City name is required, default is Canada");
+
+  const param = `q=${city || "Canada"}`;
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?${param}&appid=${API_KEY}&units=metric`;
 
   const weatherResponse = await fetch(url);
 
@@ -76,23 +92,23 @@ function updateWeatherReport(data) {
 
   setWeatherImage(weatherCondition);
 
-  getElem("status").textContent += description;
-  getElem("feels").innerHTML += `${_feels_like}<sup>°C</sup>`;
+  getElem("status").textContent = `Status: ${description}`;
+  getElem("feels").innerHTML = `Feels like: ${_feels_like}<sup>°C</sup>`;
   getElem("temp").innerHTML = temp + "<sup>°C</sup>";
   getElem("location").textContent = location;
   getElem("desc").textContent = "It's " + weatherCondition;
   // getElem("desc").textContent = description;
-  getElem("lat").textContent += lat + "°";
-  getElem("lon").textContent += lon + "°";
-  getElem("humidity").innerHTML += `${humidity}<small>g/cm<sup>3</sup></small>`;
-  getElem("pressure").innerHTML += `${pressure}<small>atm</small>`;
-  getElem("speed").innerHTML += `${speed}<small>m/s</small>`;
+  getElem("lat").textContent =`Latitude: ${lat} °` ;
+  getElem("lon").textContent = `Longitude: ${lon} °` ;
+  getElem("humidity").innerHTML = `Humidity: ${humidity}<small>g/cm<sup>3</sup></small>`;
+  getElem("pressure").innerHTML = `Pressure: ${pressure}<small>atm</small>`;
+  getElem("speed").innerHTML = `Speed: ${speed}<small>m/s</small>`;
 }
 
 // raining | sunny | mixBlendMode:
 function predictWeatherCondition(temperature = 0) {
-  if (temperature <= 20) return "cloudy";
-  if (temperature > 20 <= 35) return "mixed";
+  if (temperature < 20) return "raining";
+  if (temperature < 35) return "mixed";
   return "sunny";
 }
 
@@ -100,12 +116,24 @@ function setWeatherImage(weatherCondition) {
   const imageHtmlElement = getElem("weather-img");
 
   if (weatherCondition === "raining")
-    return (imageHtmlElement.src = "./image/cloud.png");
+    return (imageHtmlElement.src = "./image/cloudy.png");
 
   if (weatherCondition === "mixed")
-    return (imageHtmlElement.src = "./image/cloudy.png");
+    return (imageHtmlElement.src = "./image/mixed.png");
 
   imageHtmlElement.src = "./image/sun.png";
 }
 
-getUserGeoLocation().then(getWeatherInfo).catch(alert);
+// getUserGeoLocation().then(getWeatherInfoByGeoLocation).catch(alert);
+
+getElem("weather-search-id").addEventListener("click", async (e) => {
+  console.log(e.target.id);
+  if (e.target.id === "city-name") {
+    const city = getElem("get-location").value;
+
+    getWeatherInfoByCity(city);
+  }
+  if (e.target.id === "get-current-weather") {
+    await getWeatherInfoByGeoLocation(await getUserGeoLocation());
+  }
+});

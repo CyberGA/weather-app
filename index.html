@@ -9,22 +9,39 @@
   </head>
   <body>
     <div class="wrapper">
-      
-        <!-- Header -->
-        <header class="header">
-          <img
-            src="./image/logo.png"
-            alt="weather-logo"
-            width="30"
-            height="30"
-          />
-          <h1>WindScrib</h1>
-        </header>
-        <div class="card">
+      <!-- Header -->
+      <header class="header">
+        <img src="./image/logo.png" alt="weather-logo" width="30" height="30" />
+        <h1>WindScrib</h1>
+      </header>
+      <div class="card">
         <!-- Main body -->
         <main class="body">
+          <div class="weather-search" id="weather-search-id">
+            <div class="weather-search-city">
+              <label for="location-input"></label>
+              <input
+                type="text"
+                name="location-input"
+                id="get-location"
+                placeholder="Enter a city name"
+              />
+              <button id="city-name">Search</button>
+            </div>
+
+            <div class="weather-search-btn">
+              <button id="get-current-weather">Get current weather</button>
+            </div>
+          </div>
+
           <h1 id="location"></h1>
-          <img id="weather-img" src="./image/cloud.png" alt="cloud" width="150" height="150" />
+          <img
+            id="weather-img"
+            src="./image/cloud.png"
+            alt="cloud"
+            width="150"
+            height="150"
+          />
           <h4 id="desc"></h4>
           <h1 id="temp" class="weather-temp"></h1>
         </main>
@@ -32,14 +49,14 @@
         <!-- Descriptions -->
         <aside id="weather-con" class="weather-con">
           <ul>
-            <li id="status">Status: </li>
-            <li id="feels">Feels like: </li>
-            <li id="lat">Latitude: </li>
-            <li id="lon">Longitude: </li>
-            <li id="humidity">Humidity: </li>
-            <li id="pressure">Pressure: </li>
-            <li id="speed">Speed: </li>
-        </ul>
+            <li id="status"></li>
+            <li id="feels"></li>
+            <li id="lat"></li>
+            <li id="lon"></li>
+            <li id="humidity"></li>
+            <li id="pressure"></li>
+            <li id="speed"></li>
+          </ul>
         </aside>
       </div>
     </div>
